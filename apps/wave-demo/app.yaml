@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      containers:
+        - name: app
+          image: postgres:16-alpine
+          command: ["sh", "-c"]
+          args:
+            - |
+              until psql -h postgres -U admin -d todo -c 'select count(*) from todo'; do
+                echo "waiting for table..."; sleep 3
+              done
+              echo "table exists, app running"; sleep infinity
+          env:
+            - name: PGPASSWORD
+              value: admin
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}

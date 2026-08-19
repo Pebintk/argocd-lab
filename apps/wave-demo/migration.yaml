@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 300
+  activeDeadlineSeconds: 120
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: postgres:16-alpine
+          env:
+            - name: PGPASSWORD
+              value: admin
+          command: ["sh", "-c"]
+          args:
+            - |
+              until pg_isready -h postgres -U admin; do sleep 2; done
+              psql -h postgres -U admin -d todo -c \
+                'CREATE TABLE IF NOT EXISTS todo (id bigserial primary key, title varchar(255), completed boolean not null default false)'
