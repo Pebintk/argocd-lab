@@ -10,9 +10,11 @@ spec:
   source:
     repoURL: https://github.com/Pebintk/argocd-lab.git
     targetRevision: HEAD
-    path: apps/wave-demo
+    path: apps/wave-db
   destination:
     server: https://kubernetes.default.svc
     namespace: wave-demo
   syncPolicy:
     automated: {selfHeal: true, prune: true}
+    syncOptions:
+      - CreateNamespace=true
