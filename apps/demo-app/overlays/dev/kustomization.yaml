@@ -4,7 +4,7 @@ resources:
   - ../../base
 replicas:
   - name: demo-app
-    count: 5
+    count: 2
 images:
   - name: nginx
     newTag: 1.27-alpine
