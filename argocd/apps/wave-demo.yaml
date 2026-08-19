@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: waves-demo
+  name: wave-demo
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,10 +10,10 @@ spec:
   source:
     repoURL: https://github.com/Pebintk/argocd-lab.git
     targetRevision: HEAD
-    path: apps/waves-demo
+    path: apps/wave-demo
   destination:
     server: https://kubernetes.default.svc
-    namespace: waves-demo
+    namespace: wave-demo
   syncPolicy:
     automated:
       selfHeal: true
