@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: demo-app
+  name: demo-app-dev
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,10 +10,13 @@ spec:
   source:
     repoURL: https://github.com/Pebintk/argocd-lab.git
     targetRevision: HEAD
-    path: apps/demo-app
+    path: apps/demo-app/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: demo-app
+    namespace: demo-app-dev
   syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
     syncOptions:
       - CreateNamespace=true
